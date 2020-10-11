@@ -8,12 +8,35 @@ const { generateJWT } = require('../helpers/jwt.helper');
 
 const getUsers = async (req = request, res = response) => {
 
-  const users = await UsersModel.find({}, 'name email role google');
+  const offset = Number(req.query.offset) || 0;
+
+  const p_users = UsersModel.find({}, 'name email role google img')
+
+    // Paginación de datos
+
+      // Establece desde que registro se va a empezar a mostrar la data
+      .skip(offset)
+
+      // Establece cuantos registros se van a mostrar desde la posición del offset,
+      // en este caso se muestran de 5 en 5
+      .limit(5);
+
+  // obtiene el total de registros
+  const p_totalRegistros = UsersModel.countDocuments();
+
+
+  // Optimizamos esperamos que todo termina de una sola vez
+  const [ users, totalRegistros ] = await Promise.all([
+    p_users,
+    p_totalRegistros
+  ]);
+
 
   res.json({
     users,
-    uid: req.uid
+    totalRegistros
   });
+
 
 }
 
@@ -33,7 +56,7 @@ const createUser = async (req = request, res = response) => {
     }
 
     // Crea un usuario nuevo
-    const user = UsersModel(req.body);
+    const user = new UsersModel(req.body);
 
     // Encriptar contraseña
     const salt = bcrypt.genSaltSync();

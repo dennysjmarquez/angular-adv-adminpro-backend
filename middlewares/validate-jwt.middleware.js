@@ -26,10 +26,8 @@ const validateJWT = async (req = request, res = response, next) => {
 
   }catch (e) {
 
-    console.log(e);
-
     res.status(500).json({
-      msg: 'Error inesperado… revisar logs'
+      msg: 'Token no valido'
     });
 
   }
