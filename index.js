@@ -22,6 +22,8 @@ app.use('/api/medicos', require('./routes/medicos.route'));
 app.use('/api/search', require('./routes/search.route'));
 app.use('/api/upload', require('./routes/upload.route'));
 
+// Directorio público, Pagina estática
+app.use(express.static('public'));
 
 // Conecta con a base de datos
 dbConnection().then(()=>{
