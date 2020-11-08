@@ -37,6 +37,7 @@ router.put('/:id',
   [
 
     validateJWT,
+    check('name', 'El nombre es obligatorio').not().isEmpty(),
     validateFields
 
   ], updateHospital);

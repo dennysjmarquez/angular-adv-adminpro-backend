@@ -112,8 +112,37 @@ const loginGoogle = async (req = request, res = response) => {
 
 }
 
+const tokenRenew = async (req = request, res = response) => {
+
+  try {
+
+    // Se obtiene el uid del usuario
+    const uid = req.uid;
+
+    // Genera un Token de JWT
+    const token = await generateJWT(uid);
+
+    // Regresa un nuevo Token
+    res.status(200).json({
+      token
+    });
+
+  }catch (e) {
+
+    console.log(e);
+
+    res.status(500).json({
+      msg: 'Error inesperado… revisar logs'
+    });
+
+  }
+
+
+}
+
 
 module.exports = {
   login,
-  loginGoogle
+  loginGoogle,
+  tokenRenew
 }
