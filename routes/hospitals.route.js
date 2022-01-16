@@ -1,49 +1,44 @@
-const { Router } = require('express')
+const {Router} = require('express')
 const router = Router();
 
-
-
 // Middlewares
-const { check } = require('express-validator');
-const { validateFields } = require('../middlewares/validate-fields.middleware');
-const { validateJWT } = require('../middlewares/validate-jwt.middleware');
+const {check} = require('express-validator');
+const {validateFields} = require('../middlewares/validate-fields.middleware');
+const {validateJWT} = require('../middlewares/validate-jwt.middleware');
 
 // Controllers
 const {
-  getHospitals,
-  createHospital,
-  updateHospital,
-  deleteHospital
+   getHospitals,
+   createHospital,
+   updateHospital,
+   deleteHospital
 } = require('../controllers/hospitals.controller');
-
 
 router.get('/', validateJWT, getHospitals);
 
 router.post('/',
 
-  // Middlewares
+   // Middlewares
 
-  [
+   [
 
-    validateJWT,
-    validateFields
+      validateJWT,
+      validateFields
 
-  ], createHospital);
+   ], createHospital);
 
 router.put('/:id',
 
-  // Middlewares
+   // Middlewares
 
-  [
+   [
 
-    validateJWT,
-    check('name', 'El nombre es obligatorio').not().isEmpty(),
-    validateFields
+      validateJWT,
+      check('name', 'El nombre es obligatorio').not().isEmpty(),
+      validateFields
 
-  ], updateHospital);
+   ], updateHospital);
 
 router.delete('/:id', validateJWT, deleteHospital);
-
-
 
 module.exports = router;

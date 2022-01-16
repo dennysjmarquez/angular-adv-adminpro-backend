@@ -21,6 +21,8 @@
 # System Files
 .DS_Store
 Thumbs.db
-
+uploads/hospitals/*
+uploads/medicos/*
+uploads/users/*
 # dotenv environment variables file
 .env

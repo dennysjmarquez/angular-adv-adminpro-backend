@@ -93,7 +93,7 @@ const returnImg = async (req = request, res = response) => {
     // Si no existe la imagen se manda una por defecto
     if(!fs.existsSync(pathImg)){
 
-      pathImg = path.join(__dirname, `../uploads/assets/no-img.jpg`);
+      pathImg = path.join(__dirname, `../uploads/no-img.jpg`);
 
     }
 

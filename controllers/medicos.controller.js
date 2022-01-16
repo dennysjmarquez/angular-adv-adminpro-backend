@@ -1,24 +1,90 @@
-const { request, response } = require('express');
+const {request, response} = require('express');
 const bcrypt = require('bcryptjs');
 
 const MedicosModel = require('../models/medico.model');
-const { generateJWT } = require('../helpers/jwt.helper');
-
-
 
 const getMedicos = async (req = request, res = response) => {
 
-  try{
+  try {
 
-    const medicos = await MedicosModel.find()
-      .populate('user', ['name', 'img'])
-      .populate('hospital', ['name', 'img']);
+    let offset = 0;
+    let limit = 0;
+    let p_medicos;
+
+    if (req.query.offset) {
+
+      offset = Number(req.query.offset) || 0;
+      limit = Number(process.env.PAGINATION_LIMIT);
+
+      p_medicos = await MedicosModel.find({})
+         .populate('user', 'name img')
+         .populate('hospital', 'name img')
+
+         // Paginación de datos
+
+         // Establece desde que registro se va a empezar a mostrar la data
+         .skip(offset)
+
+         // Establece cuantos registros se van a mostrar desde la posición del offset,
+         // en este caso se muestran de 5 en 5
+         .limit(limit)
+
+         // Organiza ascendente por id
+         .sort({_id: -1})
+
+    }
+
+    if (!req.query.offset) {
+
+      p_medicos = await MedicosModel.find({})
+         .populate('user', 'name img')
+         .populate('hospital', 'name img')
+         // Organiza ascendente por id
+         .sort({_id: -1})
+
+    }
+
+    // Obtiene el total de registros
+    const p_records = MedicosModel.countDocuments();
+    const [medicos, records] = await Promise.all([p_medicos, p_records]);
 
     return res.json({
-      medicos
+      medicos,
+      records,
+      limit: req.query.offset ? limit : records,
+    });
+  } catch (e) {
+
+    console.log(e);
+
+    res.status(500).json({
+      msg: 'Error inesperado… revisar logs'
     });
 
-  }catch (e) {
+  }
+
+}
+
+const getMedicoById = async (req = request, res = response) => {
+
+  try {
+
+    const medico_id = req.params.id;
+    const medico = await MedicosModel.findById(medico_id).populate('hospital', 'name img');
+
+    if (!medico) {
+
+      return res.status(404).json({
+        msg: 'No existe el Médico'
+      });
+
+    }
+
+    res.json({
+      medico
+    });
+
+  } catch (e) {
 
     console.log(e);
 
@@ -47,9 +113,7 @@ const createMedico = async (req = request, res = response) => {
       medico
     })
 
-
-  }catch (e) {
-
+  } catch (e) {
 
     console.log(e);
 
@@ -70,9 +134,9 @@ const updateMedico = async (req = request, res = response) => {
 
     const medicoDb = await MedicosModel.findById(medico_id);
 
-    if(!medicoDb){
+    if (!medicoDb) {
 
-      return  res.status(404).json({
+      return res.status(404).json({
         msg: 'No existe el Médico'
       });
 
@@ -85,17 +149,17 @@ const updateMedico = async (req = request, res = response) => {
 
     // Actualiza los datos, la opcion new: true
     // indica siempre retorne el nuevo valor ingresado
-    // si todo va bien, de lo contrario retornaria el usuario
+    // si todó va bien, de lo contrario retornaria el usuario
     // o la informacion como estab antes de la actualizacion, es
     // confuso por eso {new: true} par que retorne los nuevos datos
     // actualizados OK
-    const medico = await MedicosModel.findByIdAndUpdate(medico_id, changeFields, { new: true });
+    const medico = await MedicosModel.findByIdAndUpdate(medico_id, changeFields, {new: true});
 
     res.json({
       medico
     });
 
-  }catch (e) {
+  } catch (e) {
 
     console.log(e);
 
@@ -114,7 +178,7 @@ const deleteMedico = async (req = request, res = response) => {
     const medico_id = req.params.id;
     const medicoDb = await MedicosModel.findByIdAndDelete(medico_id);
 
-    if(!medicoDb){
+    if (!medicoDb) {
 
       return res.status(404).json({
         msg: 'No existe el Médico'
@@ -127,7 +191,7 @@ const deleteMedico = async (req = request, res = response) => {
       medicoDb
     });
 
-  }catch (e) {
+  } catch (e) {
 
     console.log(e);
 
@@ -139,11 +203,9 @@ const deleteMedico = async (req = request, res = response) => {
 
 }
 
-
-
-
 module.exports = {
   getMedicos,
+  getMedicoById,
   createMedico,
   updateMedico,
   deleteMedico

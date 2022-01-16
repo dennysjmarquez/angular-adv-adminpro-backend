@@ -1,16 +1,15 @@
-const { Router } = require('express')
+const {Router} = require('express')
 const router = Router();
 
-
-
 // Middlewares
-const { check } = require('express-validator');
-const { validateFields } = require('../middlewares/validate-fields.middleware');
-const { validateJWT } = require('../middlewares/validate-jwt.middleware');
+const {check} = require('express-validator');
+const {validateFields} = require('../middlewares/validate-fields.middleware');
+const {validateJWT} = require('../middlewares/validate-jwt.middleware');
 
 // Controllers
 const {
   getMedicos,
+  getMedicoById,
   createMedico,
   updateMedico,
   deleteMedico
@@ -18,36 +17,36 @@ const {
 
 router.get('/', validateJWT, getMedicos);
 
+router.get('/:id', validateJWT, getMedicoById);
+
 router.post('/',
 
-  // Middlewares
+   // Middlewares
 
-  [
+   [
 
-    validateJWT,
-    check('hospital', 'El id del hospital es obligatorio').not().isEmpty(),
-    check('hospital', 'El id del hospital no es válido').isMongoId(),
-    check('name', 'El nombre del médico es obligatorio').not().isEmpty(),
-    validateFields
+     validateJWT,
+     check('hospital', 'El id del hospital es obligatorio').not().isEmpty(),
+     check('hospital', 'El id del hospital no es válido').isMongoId(),
+     check('name', 'El nombre del médico es obligatorio').not().isEmpty(),
+     validateFields
 
-  ], createMedico);
+   ], createMedico);
 
 router.put('/:id',
 
-  // Middlewares
+   // Middlewares
 
-  [
+   [
 
-    validateJWT,
-    check('hospital', 'El id del hospital es obligatorio').not().isEmpty(),
-    check('hospital', 'El id del hospital no es válido').isMongoId(),
-    check('name', 'El nombre del médico es obligatorio').not().isEmpty(),
-    validateFields
+     validateJWT,
+     check('hospital', 'El id del hospital es obligatorio').not().isEmpty(),
+     check('hospital', 'El id del hospital no es válido').isMongoId(),
+     check('name', 'El nombre del médico es obligatorio').not().isEmpty(),
+     validateFields
 
-  ], updateMedico);
+   ], updateMedico);
 
 router.delete('/:id', validateJWT, deleteMedico);
-
-
 
 module.exports = router;

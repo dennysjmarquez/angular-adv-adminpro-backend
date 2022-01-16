@@ -119,12 +119,16 @@ const tokenRenew = async (req = request, res = response) => {
     // Se obtiene el uid del usuario
     const uid = req.uid;
 
+    // Obtener el usuario del uid
+    const usuario = await UsersModel.findById(uid);
+
     // Genera un Token de JWT
     const token = await generateJWT(uid);
 
     // Regresa un nuevo Token
     res.status(200).json({
-      token
+      token,
+      usuario
     });
 
   }catch (e) {
@@ -136,7 +140,6 @@ const tokenRenew = async (req = request, res = response) => {
     });
 
   }
-
 
 }
 

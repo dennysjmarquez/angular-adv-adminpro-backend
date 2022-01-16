@@ -20,7 +20,7 @@ const {
 
 router.put('/:type/:id', [validateJWT, validateUploads], upLoad);
 
-router.get('/:type/:photo', [validateJWT, validateUploads], returnImg);
+router.get('/:type/:photo', [validateUploads], returnImg);
 
 
 module.exports = router;

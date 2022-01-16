@@ -1,12 +1,12 @@
-const { Router } = require('express')
+const {Router} = require('express')
 const router = Router();
-const { check } = require('express-validator');
+const {check} = require('express-validator');
 
-const { validateFields } = require('../middlewares/validate-fields.middleware');
-const { validateJWT } = require('../middlewares/validate-jwt.middleware')
+const {validateFields} = require('../middlewares/validate-fields.middleware');
+const {validateJWT} = require('../middlewares/validate-jwt.middleware')
 
 // Controllers
-const { login, loginGoogle, tokenRenew } = require('../controllers/auth.controller');
+const {login, loginGoogle, tokenRenew} = require('../controllers/auth.controller');
 
 
 router.post('/',
@@ -36,7 +36,7 @@ router.get('/tokenrenew',
 
     validateJWT
 
-  ], tokenRenew );
+  ], tokenRenew);
 
 
 module.exports = router;

@@ -1,8 +1,8 @@
 require('dotenv').config();
 
 const express = require('express');
-const {dbConnection} = require('./database/config');
-const cors = require('cors')
+const { dbConnection } = require('./database/config');
+const cors = require('cors');
 
 // crea el servidor de express
 const app = new express();
@@ -26,19 +26,15 @@ app.use('/api/upload', require('./routes/upload.route'));
 app.use(express.static('public'));
 
 // Conecta con a base de datos
-dbConnection().then(()=>{
-
-  // Inicia el servidor de express
-  app.listen(process.env.PORT,()=>{
-
-    console.log(`** Servidor corriedo en: http://localhost:${process.env.PORT}/ **`);
-
-  })
-
-}).catch(e =>{
-
-  console.error(e);
-
-});
+dbConnection()
+	.then(() => {
+		// Inicia el servidor de express
+		app.listen(process.env.PORT, () => {
+			console.log(`** Servidor corriedo en: http://localhost:${process.env.PORT}/ **`);
+		});
+	})
+	.catch((e) => {
+		console.error(e);
+	});
 
 
