@@ -66,7 +66,7 @@ const createHospital = async (req = request, res = response) => {
   try {
     // Crea un hospital
     const hospital = new HospitalsModel({
-      user: req.uid,
+      user: req.usuario.uid,
       ...req.body,
     });
 
@@ -88,7 +88,7 @@ const createHospital = async (req = request, res = response) => {
 const updateHospital = async (req = request, res = response) => {
   try {
     const hospital_id = req.params.id;
-    const user_uid = req.uid;
+    const user_uid = req.usuario.uid;
 
     const hospitalDb = await HospitalsModel.findById(hospital_id);
 

@@ -12,10 +12,11 @@ const validateJWT = async (req = request, res = response, next) => {
 		}
 
 		// Leer Token
-		const { uid } = await jwt.verify(token, process.env.JWT_SECRET);
+		const data = await jwt.verify(token, process.env.JWT_SECRET);
+		const { uid, role } = data.payLoad;
 
 		// se pasa al controlador el uid
-		req.uid = uid;
+		req.usuario = { uid, role };
 
 		next();
 	} catch (e) {

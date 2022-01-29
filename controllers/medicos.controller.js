@@ -102,7 +102,7 @@ const createMedico = async (req = request, res = response) => {
 
     // Crea un medico
     const medico = new MedicosModel({
-      user: req.uid,
+      user: req.usuario.uid,
       ...req.body
     });
 
@@ -130,7 +130,7 @@ const updateMedico = async (req = request, res = response) => {
   try {
 
     const medico_id = req.params.id;
-    const user_uid = req.uid;
+    const user_uid = req.usuario.uid;
 
     const medicoDb = await MedicosModel.findById(medico_id);
 

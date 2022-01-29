@@ -5,147 +5,134 @@ const UsersModel = require('../models/usuario.model');
 const { googleVerifyIdToken } = require('../helpers/googleVerifyIdToken.helper');
 const { generateJWT } = require('../helpers/jwt.helper');
 
-
-
 const login = async (req = request, res = response) => {
+	const { email, password } = req.body;
 
+	try {
+		// Verifica el Email
+		const userDb = await UsersModel.findOne({ email });
+		if (!userDb) {
+			return res.status(404).json({
+				msg: 'No se ha podido encontrar tu cuenta',
+			});
+		}
 
-  const { email, password } = req.body;
+		// Verifica el Password
+		const validPass = bcrypt.compareSync(password, userDb.password);
 
+		if (!validPass) {
+			return res.status(400).json({
+				msg: 'Contraseña incorrecta',
+			});
+		}
 
-  try {
+		const payLoad = {
+			uid: userDb.id,
+			role: userDb.role,
+		};
 
-    // Verifica el Email
-    const userDb = await UsersModel.findOne({ email });
-    if(!userDb){
+		// Genera un Token de JWT
+		const token = await generateJWT(payLoad);
 
-      return res.status(404).json({
-        msg: 'No se ha podido encontrar tu cuenta'
-      });
+		res.json({
+			token,
+			usuario: userDb
+		});
+	} catch (e) {
 
-    }
-
-    // Verifica el Password
-    const validPass = bcrypt.compareSync(password, userDb.password);
-
-    if(!validPass){
-
-      return res.status(400).json({
-        msg: 'Contraseña incorrecta'
-      });
-
-    }
-
-    // Genera un Token de JWT
-    const token = await generateJWT(userDb.id);
-
-    res.json({
-      token
-    });
-
-  }catch (e) {
-
-    console.log(e);
-
-    res.status(500).json({
-      msg: 'Error inesperado… revisar logs'
-    });
-
-  }
-
-
-}
+		res.status(500).json({
+			msg: 'Error inesperado… revisar logs',
+		});
+	}
+};
 
 const loginGoogle = async (req = request, res = response) => {
+	const { token: G_token } = req.body;
 
-  const { token: G_token } = req.body;
+	try {
+		const { email, name, picture } = await googleVerifyIdToken(G_token);
 
+		// Se chequea si el usuario existe o se va a crear uno nuevo
+		const userDB = await UsersModel.findOne({ email });
 
-  try {
+		let userNew;
 
-    const { email, name, picture } = await googleVerifyIdToken(G_token);
+		if (!userDB) {
+			userNew = new UsersModel({
+				password: '123456',
+				name,
+				email,
+				google: true,
+				img: picture,
+			});
 
-    // Se chequea si el usuario existe o se va a crear uno nuevo
-    const userDB = await UsersModel.findOne({email});
+			// Guarda en la Db el user
+			await userNew.save();
+		} else {
+			userNew = userDB;
+			userNew.google = true;
 
-    let userNew;
+			// Guarda en la Db el user
+			await userNew.save();
+		}
 
-    if(!userDB){
+		const payLoad = {
+			uid: userNew.id,
+			role: userNew.role,
+		};
 
-      userNew = new UsersModel({
-        password: '123456',
-        name,
-        email,
-        google: true,
-        img: picture
-      });
+		// Genera un Token de JWT
+		const token = await generateJWT(payLoad);
 
-      // Guarda en la Db el user
-      await userNew.save();
+		res.json({
+			token,
+			usuario: userNew
+		});
+	} catch (e) {
+		console.log(e);
 
-    }else{
-
-      userNew = userDB;
-      userNew.google = true;
-
-      // Guarda en la Db el user
-      await userNew.save();
-
-    }
-
-    // Genera un Token de JWT
-    const token = await generateJWT(userNew.id);
-
-    res.json({
-      token
-    });
-
-  }catch (e) {
-
-    console.log(e);
-
-    res.status(500).json({
-      msg: 'El Token no es correcto '
-    });
-
-  }
-
-}
+		res.status(500).json({
+			msg: 'El Token no es correcto ',
+		});
+	}
+};
 
 const tokenRenew = async (req = request, res = response) => {
+	try {
+		// Se obtiene el uid del usuario
+		const { uid } = req.usuario;
 
-  try {
+		// Obtener el usuario del uid
+		const usuario = await UsersModel.findById(uid);
 
-    // Se obtiene el uid del usuario
-    const uid = req.uid;
+		if (!usuario) {
+			throw 'No se ha podido encontrar la cuenta'
+		}
 
-    // Obtener el usuario del uid
-    const usuario = await UsersModel.findById(uid);
+		// PayLoad del Token
+		const payLoad = {
+			uid: usuario.id,
+			role: usuario.role,
+		};
 
-    // Genera un Token de JWT
-    const token = await generateJWT(uid);
+		// Genera un Token de JWT
+		const token = await generateJWT(payLoad);
 
-    // Regresa un nuevo Token
-    res.status(200).json({
-      token,
-      usuario
-    });
-
-  }catch (e) {
-
-    console.log(e);
-
-    res.status(500).json({
-      msg: 'Error inesperado… revisar logs'
-    });
-
-  }
-
-}
-
+		// Regresa un nuevo Token
+		res.status(200).json({
+			token,
+			usuario,
+		});
+	} catch (e) {
+		console.log(e);
+		res.status(500).json({
+			msg: 'Error inesperado… revisar logs',
+		});
+	}
+};
 
 module.exports = {
-  login,
-  loginGoogle,
-  tokenRenew
+   login,
+   loginGoogle,
+   tokenRenew
 }

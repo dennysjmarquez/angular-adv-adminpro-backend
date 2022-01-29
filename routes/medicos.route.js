@@ -1,52 +1,66 @@
-const {Router} = require('express')
+const { Router } = require('express');
 const router = Router();
+const { ROLES } = require('../constant');
 
 // Middlewares
-const {check} = require('express-validator');
-const {validateFields} = require('../middlewares/validate-fields.middleware');
-const {validateJWT} = require('../middlewares/validate-jwt.middleware');
+const { check } = require('express-validator');
+const { validateFields } = require('../middlewares/validate-fields.middleware');
+const { validateJWT } = require('../middlewares/validate-jwt.middleware');
+const { validateRole } = require('../middlewares/validate-role.middleware');
 
 // Controllers
-const {
-  getMedicos,
-  getMedicoById,
-  createMedico,
-  updateMedico,
-  deleteMedico
-} = require('../controllers/medicos.controller');
+const { getMedicos, getMedicoById, createMedico, updateMedico, deleteMedico } = require('../controllers/medicos.controller');
 
 router.get('/', validateJWT, getMedicos);
 
-router.get('/:id', validateJWT, getMedicoById);
+router.get(
+	'/:id',
 
-router.post('/',
+	// Middlewares
 
-   // Middlewares
+	[validateJWT],
+	getMedicoById
+);
 
-   [
+router.post(
+	'/',
 
-     validateJWT,
-     check('hospital', 'El id del hospital es obligatorio').not().isEmpty(),
-     check('hospital', 'El id del hospital no es válido').isMongoId(),
-     check('name', 'El nombre del médico es obligatorio').not().isEmpty(),
-     validateFields
+	// Middlewares
 
-   ], createMedico);
+	[
+		validateJWT,
+		validateRole([ROLES.ADMIN_ROLE]),
+		check('hospital', 'El id del hospital es obligatorio').not().isEmpty(),
+		check('hospital', 'El id del hospital no es válido').isMongoId(),
+		check('name', 'El nombre del médico es obligatorio').not().isEmpty(),
+		validateFields,
+	],
+	createMedico
+);
 
-router.put('/:id',
+router.put(
+	'/:id',
 
-   // Middlewares
+	// Middlewares
 
-   [
+	[
+		validateJWT,
+		validateRole([ROLES.ADMIN_ROLE]),
+		check('hospital', 'El id del hospital es obligatorio').not().isEmpty(),
+		check('hospital', 'El id del hospital no es válido').isMongoId(),
+		check('name', 'El nombre del médico es obligatorio').not().isEmpty(),
+		validateFields,
+	],
+	updateMedico
+);
 
-     validateJWT,
-     check('hospital', 'El id del hospital es obligatorio').not().isEmpty(),
-     check('hospital', 'El id del hospital no es válido').isMongoId(),
-     check('name', 'El nombre del médico es obligatorio').not().isEmpty(),
-     validateFields
+router.delete(
+	'/:id',
 
-   ], updateMedico);
+	// Middlewares
 
-router.delete('/:id', validateJWT, deleteMedico);
+	[validateJWT, validateRole([ROLES.ADMIN_ROLE])],
+	deleteMedico
+);
 
 module.exports = router;
