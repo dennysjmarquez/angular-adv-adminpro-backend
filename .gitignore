@@ -24,5 +24,4 @@ Thumbs.db
 uploads/hospitals/*
 uploads/medicos/*
 uploads/users/*
-# dotenv environment variables file
-.env
+
