@@ -15,7 +15,7 @@ const validateRole =
 				getParamsUID = req.params.id;
 			}
 
-			if (!usuario || !roles.includes(usuario.role) && paramsUID && getParamsUID !== uid) {
+			if (!usuario || !roles.includes(usuario.role) && !(paramsUID && getParamsUID === uid)) {
 				return res.status(403).json({
 					msg: 'Acceso denegado',
 				});

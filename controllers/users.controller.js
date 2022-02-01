@@ -77,12 +77,17 @@ const createUser = async (req = request, res = response) => {
 		// Guarda en la Db el user
 		await user.save();
 
+		const payLoad = {
+			uid: user.id,
+			role: user.role,
+		};
+
 		// Genera un Token - JWT
-		const token = await generateJWT(user.id);
+		const token = await generateJWT(payLoad);
 
 		res.json({
-			user,
 			token,
+			usuario: user
 		});
 	} catch (e) {
 		console.log(e);
