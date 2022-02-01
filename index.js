@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const express = require('express');
+const path = require('path');
 const { dbConnection } = require('./database/config');
 const cors = require('cors');
 
@@ -24,6 +25,11 @@ app.use('/api/upload', require('./routes/upload.route'));
 
 // Directorio público, Pagina estática
 app.use(express.static('public'));
+
+// Si no está en las rutas se pasa por la index.html
+app.use('*', (req, res) => {
+	res.sendFile(path.resolve(__dirname, 'public/index.html'));
+});
 
 // Conecta con a base de datos
 dbConnection()
