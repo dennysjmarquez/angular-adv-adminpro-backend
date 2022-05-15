@@ -3,6 +3,8 @@
 Este es un servidor de Node.js que implementa a cors para limitar el acceso a la API, Express, express-fileupload,
 express-validator, google-auth-library, JWT, mongoose, escape-string-regexp, y MongoDB CRUD.
 
+<img src="https://miro.medium.com/max/1400/1*tFvx5wqtuZ-ggSxUjTciOA.png"/>
+
 **Más información sobre este servidor lo encuentra aquí :**
 [https://dennysjmarquez.medium.com/angular-10-mean-google-auth-jwt-lazyload-upload-de-archivos-guards-pipes-zona-admin-bfa2e5ef9074](https://dennysjmarquez.medium.com/angular-10-mean-google-auth-jwt-lazyload-upload-de-archivos-guards-pipes-zona-admin-bfa2e5ef9074)
 
