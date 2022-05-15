@@ -28,7 +28,7 @@ PAGINATION_LIMIT=
 **PORT** Es el puerto en el que se va a montar el servidor
 
 **DB_CNN** Este la URL con el nombre y pass del usuario de la dB creada en MongoDB Atlas
-EJEMLPO: DB_CNN='mongodb+srv://user:868g6iy6jjgj67jg@cluster0.dznfv.mongodb.net/hospitaldb'
+EJEMLPO: `DB_CNN='mongodb+srv://user:868g6iy6jjgj67jg@cluster0.dznfv.mongodb.net/hospitaldb'`
 
 **JWT_SECRET** Es una clave full segura para generar y comprobar el token de JWT
 
