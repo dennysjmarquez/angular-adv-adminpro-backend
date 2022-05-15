@@ -33,7 +33,8 @@ EJEMLPO: DB_CNN='mongodb+srv://user:868g6iy6jjgj67jg@cluster0.dznfv.mongodb.net/
 **JWT_SECRET** Es una clave full segura para generar y comprobar el token de JWT
 
 **GOOGLE_ID** Es el ID generado en la App OAuth2 de Google, puedes conseguir uno aquí 
-[https://console.cloud.google.com/apis/credentials](Es el ID generado en la App OAuth2 de Google, puedes conseguir uno aquí https://console.cloud.google.com/apis/credentials)
+Es el ID generado en la App OAuth2 de Google, puedes conseguir uno aquí 
+[https://console.cloud.google.com/apis/credentials](https://console.cloud.google.com/apis/credentials)
 
 **PAGINATION_LIMIT** Ya que el proyecto puede usar paginaciones en sus resultados, esto establece el número de resultados por página, yo use 10
 
