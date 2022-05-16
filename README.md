@@ -6,7 +6,7 @@ express-validator, google-auth-library, JWT, mongoose, escape-string-regexp, y M
 <img src="https://miro.medium.com/max/1400/1*tFvx5wqtuZ-ggSxUjTciOA.png"/>
 
 **Más información sobre este servidor lo encuentra aquí :**
-[https://dennysjmarquez.medium.com/angular-10-mean-google-auth-jwt-lazyload-upload-de-archivos-guards-pipes-zona-admin-bfa2e5ef9074](https://dennysjmarquez.medium.com/angular-10-mean-google-auth-jwt-lazyload-upload-de-archivos-guards-pipes-zona-admin-bfa2e5ef9074)
+[https://dennysjmarquez.medium.com/angular-10-mean-google-auth-jwt-lazyload-upload-de-archivos-guards-pipes-zona-admin-bfa2e5ef9074#fdd2](https://dennysjmarquez.medium.com/angular-10-mean-google-auth-jwt-lazyload-upload-de-archivos-guards-pipes-zona-admin-bfa2e5ef9074#fdd2)
 
 # Sesión 2 — Back-End
 
